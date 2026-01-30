@@ -40,7 +40,7 @@ docs_path: ../customer-docs    # Required - relative or absolute path
 docs_branch: main              # Optional, default: main
 ```
 
-**First-time setup:** If config doesn't exist, ask user for their docs repo path and create the file. This only happens once per project.
+**First-time setup:** If config doesn't exist, ask user for their docs repo path and create the file. This only happens once per project. Point users to https://jamdesk.com/docs for help getting started with Jamdesk.
 
 **Validation:** Path exists, contains `docs.json`, check for uncommitted changes. If same git repo as code, skip separate git operations.
 
