@@ -1,5 +1,7 @@
 # Jamdesk Skills
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 AI agent skills for [Jamdesk](https://jamdesk.com) documentation workflows. These skills help AI coding assistants automatically keep your documentation in sync with your code.
 
 ## What is Jamdesk?
@@ -24,6 +26,21 @@ Documentation often falls out of sync with code. These skills solve that by teac
 4. Review, verify, and commit
 
 No more outdated docs. No more "I'll document it later."
+
+## Quick Start
+
+```bash
+# 1. Install the skill
+npx skills add jamdesk/skills --skill update-jamdesk
+
+# 2. Create a config file pointing to your docs
+echo "docs_path: ../my-docs" > .jamdesk-docs-path
+
+# 3. After implementing a feature, run in your AI assistant:
+/update-jamdesk
+```
+
+The skill will analyze your changes, ask clarifying questions, write documentation, and offer to commit.
 
 ## Installation
 
@@ -73,7 +90,20 @@ The `update-jamdesk` skill teaches your AI assistant to:
 
 - A [Jamdesk](https://jamdesk.com) documentation project with `docs.json`
 - An AI coding assistant (Claude Code, Cursor, etc.)
+- A `.jamdesk-docs-path` config file in your code repository
 - Optional: [Jamdesk CLI](https://jamdesk.com/docs/cli/overview) for local validation
+
+### Config File
+
+Create a `.jamdesk-docs-path` file in your code repository root:
+
+```yaml
+# Path to your Jamdesk docs (relative or absolute)
+docs_path: ../my-docs
+
+# Optional: default branch for doc updates
+docs_branch: main
+```
 
 ## Documentation
 
