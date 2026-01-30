@@ -15,6 +15,8 @@ AI agent skills for [Jamdesk](https://jamdesk.com) documentation workflows. Thes
 - Built-in analytics and OpenAPI support
 - Custom domains with SSL
 
+**New to Jamdesk?** Check out the [documentation](https://jamdesk.com/docs) to get started, or try the [quickstart guide](https://jamdesk.com/docs/quickstart) to deploy your first docs site in minutes.
+
 ## Why Use These Skills?
 
 Documentation often falls out of sync with code. These skills solve that by teaching AI coding assistants how to automatically update your Jamdesk docs when you make changes to APIs, CLI commands, UI components, or configuration options.
