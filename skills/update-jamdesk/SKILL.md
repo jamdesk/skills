@@ -119,7 +119,7 @@ command --example
 
 **API docs:** Prefer OpenAPI auto-generation when available.
 
-**Navigation:** Add new pages to `docs.json` navigation.
+**Navigation:** Add new pages to `docs.json` navigation in alphabetical order unless the user has specified a different ordering or the existing structure suggests intentional grouping.
 
 ## Phase 5: Verify
 
