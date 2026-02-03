@@ -17,10 +17,12 @@ Updates customer-facing documentation in external repositories (not CLAUDE.md). 
 
 | Always | Never |
 |--------|-------|
-| Include frontmatter (`title` minimum) | Create stub pages with "TODO" |
+| Include frontmatter (`title` 50-60 chars, `description` 120-160 chars) | Create stub pages with "TODO" |
 | Use built-in components first | Use `mint.json` (use `docs.json`) |
 | Ask clarifying questions before writing | Skip verification |
-| Reference https://jamdesk.com/docs | Commit to main without asking |
+| State prerequisites up front | Include secrets, tokens, or real customer data |
+| Use active voice and action-oriented headings | Promise guarantees ("always works", "instant") |
+| Include explicit warnings for destructive steps | Use "click here" link text |
 
 ## Flags
 
@@ -82,23 +84,48 @@ Recommended:
 
 Reference https://jamdesk.com/docs for full standards.
 
-**Content quality:** Explain *why*, not just *what*. Show the simplest working example first. Use real values in examples, not placeholders. One concept per section.
+**Content quality:**
+- Explain *why*, not just *what*
+- Show the simplest working example first
+- Use real values in examples, not placeholders
+- One concept per section, 3-7 subsections per page
+- Define terms once and reuse consistently
+
+**Writing quality:**
+- Active voice, direct instructions (not marketing phrasing)
+- Short sentences, avoid idioms (global audiences)
+- Action-oriented headings ("Configure X", "Verify Y", "Troubleshoot Z")
+- Descriptive link text (never "click here")
+- Include `<Warning>` for destructive/irreversible steps
 
 **Page structure:**
-1. Opening paragraph (what + why)
-2. Quick Start (simplest example)
-3. Configuration/Details
-4. Examples (basic → advanced)
-5. What's Next (related pages)
+1. Opening paragraph (what + why + target audience)
+2. Prerequisites (tools, access, versions)
+3. Quick Start (simplest example)
+4. Configuration/Details
+5. Examples (basic → advanced)
+6. What's Next (2-4 related links)
+
+**Page types:**
+- **Task pages:** Step-by-step procedure with numbered steps
+- **Reference pages:** Minimal example first, then expand with details
+
+**Heading structure:** Single H1 (page title in frontmatter), body sections start at H2.
 
 **Minimal template:**
 ```mdx
 ---
 title: Feature Name
-description: SEO description (50-160 chars)
+description: SEO description (120-160 chars, unique per page)
+lastUpdated: 2026-02-03  # Optional, for frequently-changing features
 ---
 
-What this does and why it's useful.
+What this does and why it's useful. Target audience: developers who need X.
+
+## Prerequisites
+
+- Node.js 18+
+- API key from [Settings](/settings)
 
 ## Quick Start
 
@@ -108,18 +135,23 @@ command --example
 
 ## What's Next?
 
-<Card title="Related" href="/path">Description</Card>
+<Cards>
+  <Card title="Related Feature" href="/related">Continue with this</Card>
+  <Card title="API Reference" href="/api">Full API details</Card>
+</Cards>
 ```
 
 **Components:** `<Tabs>`, `<Steps>`, `<Accordion>`, `<Cards>`, `<Note>`/`<Warning>`/`<Tip>`, `<CodeGroup>`. See https://jamdesk.com/docs/components
 
-**Images:** Store in `/images/<feature>/`, use absolute paths, always include alt text.
+**Images:** Store in `/images/<feature>/`, use absolute paths, always include alt text, avoid color-only cues.
 
-**Links:** Relative paths, no `.mdx` extension, avoid orphan pages.
+**Links:** Relative paths, no `.mdx` extension, avoid orphan pages, link to source of truth (API spec, release notes).
 
 **API docs:** Prefer OpenAPI auto-generation when available.
 
 **Navigation:** Add new pages to `docs.json` navigation in alphabetical order unless the user has specified a different ordering or the existing structure suggests intentional grouping.
+
+**Maintenance:** Use `lastUpdated` frontmatter for frequently-changing features. Mark or remove deprecated guidance promptly.
 
 ## Phase 5: Verify
 
@@ -197,3 +229,7 @@ Stop if you catch yourself:
 - Using full URLs for internal links
 - Adding images without alt text
 - Making changes with `--preview` flag
+- Including secrets, tokens, or real customer data
+- Using "click here" or vague link text
+- Missing `<Warning>` on destructive steps
+- Leaving deprecated content without marking it
