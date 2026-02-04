@@ -56,3 +56,6 @@ npx skills add jamdesk/skills --skill <skill-name>
 
 - Main monorepo: `github.com/jamdesk/jamdesk` (internal)
 - Documentation: `jamdesk.com/docs/development/ai-documentation`
+
+---
+*Last reviewed: 2026-02-03*
