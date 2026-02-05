@@ -92,11 +92,12 @@ Reference https://jamdesk.com/docs for full standards.
 - Define terms once and reuse consistently
 
 **Writing quality:**
-- Active voice, direct instructions (not marketing phrasing)
+- Active voice, direct instructions
 - Short sentences, avoid idioms (global audiences)
 - Action-oriented headings ("Configure X", "Verify Y", "Troubleshoot Z")
 - Descriptive link text (never "click here")
 - Include `<Warning>` for destructive/irreversible steps
+- **No description echo:** The opening paragraph MUST say something different from the frontmatter `description`. The description is for SEO meta tags; the opening paragraph should complement it with context, prerequisites, or what the reader will accomplish -- not repeat it.
 
 **Page structure:**
 1. Opening paragraph (what + why + target audience)
@@ -135,13 +136,17 @@ command --example
 
 ## What's Next?
 
-<Cards>
-  <Card title="Related Feature" href="/related">Continue with this</Card>
-  <Card title="API Reference" href="/api">Full API details</Card>
-</Cards>
+<Columns cols={2}>
+  <Card title="Related Feature" href="/related">
+    Continue with this
+  </Card>
+  <Card title="API Reference" href="/api">
+    Full API details
+  </Card>
+</Columns>
 ```
 
-**Components:** `<Tabs>`, `<Steps>`, `<Accordion>`, `<Cards>`, `<Note>`/`<Warning>`/`<Tip>`, `<CodeGroup>`. See https://jamdesk.com/docs/components
+**Components:** `<Tabs>`, `<Steps>`, `<Accordion>`, `<Columns>`, `<Card>`, `<Note>`/`<Warning>`/`<Tip>`, `<CodeGroup>`. There is no `<Cards>` component -- use `<Columns cols={2}>` with `<Card>` children. See https://jamdesk.com/docs/components
 
 **Images:** Store in `/images/<feature>/`, use absolute paths, always include alt text, avoid color-only cues.
 
@@ -233,3 +238,4 @@ Stop if you catch yourself:
 - Using "click here" or vague link text
 - Missing `<Warning>` on destructive steps
 - Leaving deprecated content without marking it
+- Copying the frontmatter `description` as the opening paragraph (description echo)
