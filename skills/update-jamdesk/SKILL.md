@@ -13,7 +13,7 @@ Updates customer-facing documentation in external repositories (not CLAUDE.md). 
 
 **Skip when:** Internal refactors, test-only changes, build/CI config, performance work without behavior change.
 
-**Common mistake:** Changes to `docs.json` format or the builder's config handling are user-facing features that customers configure. Even if the change was made inside the docs repo itself, ask: "Does this introduce or change a config pattern that customers use?" If yes, document it.
+**Common mistake:** Changes to `docs.json` format or config handling are user-facing. Even if the change was made inside the docs repo itself, ask: "Does this introduce or change a config pattern that customers use?" If yes, document it.
 
 ## Critical Rules
 
