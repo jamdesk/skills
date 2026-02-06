@@ -9,9 +9,11 @@ Updates customer-facing documentation in external repositories (not CLAUDE.md). 
 
 **Announce:** "I'm using the update-jamdesk skill to update your documentation."
 
-**Use when:** User-facing changes to APIs, CLI commands, UI, config options, or component behavior.
+**Use when:** User-facing changes to APIs, CLI commands, UI, config options, component behavior, or docs.json schema/features.
 
 **Skip when:** Internal refactors, test-only changes, build/CI config, performance work without behavior change.
+
+**Common mistake:** Changes to `docs.json` format or the builder's config handling are user-facing features that customers configure. Even if the change was made inside the docs repo itself, ask: "Does this introduce or change a config pattern that customers use?" If yes, document it.
 
 ## Critical Rules
 
@@ -79,6 +81,7 @@ Recommended:
 | Major capability | New standalone page |
 | Deprecation/removal | Update existing + add migration notes |
 | Advanced usage | Add `<Accordion>` to existing |
+| New docs.json config/pattern | Update docs.json reference and/or navigation docs |
 
 ## Phase 4: Write Documentation
 
