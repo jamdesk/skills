@@ -1,6 +1,6 @@
 ---
 name: update-jamdesk
-description: Use when user-facing code changes need documentation, user says "update docs"/"document this"/"add to jamdesk docs", or after implementing APIs, CLI commands, or UI components.
+description: "Use when user-facing code changes need documentation — after implementing APIs, CLI commands, UI components, or config options. Triggers on 'update docs', 'document this', 'add to jamdesk docs', 'write docs', 'docs are outdated', 'the docs don't mention X', or any request to create/update Jamdesk documentation pages. Also use proactively after feature work that changes user-facing behavior, even if the user doesn't explicitly ask for docs — suggest it."
 ---
 
 # Update Jamdesk
@@ -80,7 +80,7 @@ Recommended:
 | Small addition | Add section to existing page |
 | Major capability | New standalone page |
 | Deprecation/removal | Update existing + add migration notes |
-| Advanced usage | Add `<Accordion>` to existing |
+| Advanced usage | Add `<Accordion>` to existing page (keeps the page scannable for beginners) |
 | New docs.json config/pattern | Update docs.json reference and/or navigation docs |
 
 ## Phase 4: Write Documentation
@@ -90,7 +90,7 @@ Reference https://jamdesk.com/docs for full standards.
 **Content quality:**
 - Explain *why*, not just *what*
 - Show the simplest working example first
-- Use real values in examples, not placeholders
+- Use real values in examples, not placeholders (readers learn faster from concrete examples they can copy-paste)
 - One concept per section, 3-7 subsections per page
 - Define terms once and reuse consistently
 
