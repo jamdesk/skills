@@ -64,6 +64,7 @@ npx skills add jamdesk/skills
 | Skill | Description |
 |-------|-------------|
 | [update-jamdesk](./skills/update-jamdesk) | Automatically updates Jamdesk documentation when code changes |
+| [blur-image](./skills/blur-image) | Detects and blurs sensitive regions in screenshots using AI + ImageMagick |
 
 ## Supported AI Coding Assistants
 
