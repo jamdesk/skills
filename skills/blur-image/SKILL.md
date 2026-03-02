@@ -21,7 +21,8 @@ Detect and blur sensitive regions in screenshots using AI vision + ImageMagick.
 | Show the generated command before executing | Overwrite the original file without `--overwrite` flag |
 | Use sigma >= 15 for privacy-sensitive content (low sigma is reversible) | Use sigma < 10 (can be reversed with deblurring algorithms) |
 | Save output as WebP with `-quality 85` | Blur decorative/non-sensitive content without asking |
-| Add 20-30px padding around detected text regions (AI coordinates have error margins) | Trust raw AI coordinates without padding |
+| Add 30-50px padding around detected text regions (AI coordinates have 20-50px error margins) | Trust raw AI coordinates without padding |
+| Clamp region coordinates so no region extends past image edges | Generate regions that exceed image dimensions |
 | Read output image after blurring to verify correct regions were blurred | Skip the verification step |
 | Get image pixel dimensions with `magick identify` before generating coordinates | Assume coordinates without checking actual image dimensions |
 
@@ -43,8 +44,8 @@ Check that ImageMagick is installed and the image is valid.
    - macOS: `brew install imagemagick`
    - Ubuntu/Debian: `sudo apt install imagemagick`
    - Other: https://imagemagick.org/script/download.php
-2. Verify the image file exists and format is supported (png, jpg, jpeg, webp, tiff)
-3. Get actual pixel dimensions: `magick identify -format '%wx%h' image.png`
+2. Verify the image file exists and format is supported (png, jpg, jpeg, webp, tiff). **Reject animated images** (GIF, animated WebP, APNG) — `-region` blur applies to the first frame only, producing misleading output
+3. Get actual pixel dimensions: `magick identify -format '%wx%h' image.png` (if this returns multiple lines, the image is animated — stop and tell the user)
 4. Report dimensions to confirm the coordinate space — Retina/HiDPI screenshots may be 2x logical resolution
 
 ## Phase 2: Identify Regions
@@ -63,7 +64,7 @@ Two modes depending on flags and user input.
    - File paths with usernames
    - Passwords, database connection strings
 3. For each region, determine the bounding box `(x, y, width, height)` in pixels from **top-left origin** (ImageMagick's coordinate system)
-4. **Add 20-30px padding** to all sides of each detected region — AI spatial detection has 20-50px error margins
+4. **Add 30-50px padding** to all sides of each detected region — AI spatial detection has 20-50px error margins. Clamp coordinates so regions don't extend past image edges (X >= 0, Y >= 0, X+W <= image width, Y+H <= image height)
 5. Present findings:
    ```
    I found N regions with sensitive text:
@@ -88,7 +89,7 @@ Build the ImageMagick command with all confirmed regions.
 magick input.png \
   -region WxH+X+Y -blur 0x20 \
   -region WxH+X+Y -blur 0x20 \
-  -quality 85 output-blurred.webp
+  -strip -quality 85 output-blurred.webp
 ```
 
 **Solid fill (`--solid` flag):**
@@ -96,9 +97,10 @@ magick input.png \
 magick input.png \
   -region WxH+X+Y -fill black -colorize 100 \
   -region WxH+X+Y -fill black -colorize 100 \
-  -quality 85 output-blurred.webp
+  -strip -quality 85 output-blurred.webp
 ```
 
+- Add `-strip` to remove EXIF/metadata from the output (screenshots may contain GPS, device info, or timestamps)
 - Default output filename: `<original-name>-blurred.webp` alongside the original
 - Present the full command and output path before running
 - Ask: "Run this command? The blurred image will be saved as [path]."
@@ -132,7 +134,7 @@ Running:
   magick screenshot.png \
     -region 320x65+430+210 -blur 0x20 \
     -region 390x60+80+560 -blur 0x20 \
-    -quality 85 screenshot-blurred.webp
+    -strip -quality 85 screenshot-blurred.webp
 
 ✓ Done. Saved to screenshot-blurred.webp
 I've verified the output — both regions are blurred and surrounding content is intact.

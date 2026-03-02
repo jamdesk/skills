@@ -14,8 +14,10 @@ skills/
 ├── LICENSE             # MIT
 ├── CLAUDE.md           # This file
 └── skills/
+    ├── blur-image/
+    │   └── SKILL.md    # Screenshot redaction skill
     └── update-jamdesk/
-        └── SKILL.md    # Skill definition
+        └── SKILL.md    # Documentation update skill
 ```
 
 ## Adding a New Skill
