@@ -13,6 +13,8 @@ Detect and blur sensitive regions in screenshots using AI vision + ImageMagick.
 
 **Skip when:** Crop, resize, format conversion, color adjustments, or non-privacy image editing.
 
+**Common mistake:** Output goes to `<name>-blurred.webp` by default, not overwriting the original. If the user expects in-place editing, they need `--overwrite`.
+
 ## Critical Rules
 
 | Always | Never |
@@ -21,8 +23,7 @@ Detect and blur sensitive regions in screenshots using AI vision + ImageMagick.
 | Show the generated command before executing | Overwrite the original file without `--overwrite` flag |
 | Use sigma >= 15 for privacy-sensitive content (low sigma is reversible) | Use sigma < 10 (can be reversed with deblurring algorithms) |
 | Save output as WebP with `-quality 85` | Blur decorative/non-sensitive content without asking |
-| Add 30-50px padding around detected text regions (AI coordinates have 20-50px error margins) | Trust raw AI coordinates without padding |
-| Clamp region coordinates so no region extends past image edges | Generate regions that exceed image dimensions |
+| Add 30-50px padding around detected regions, clamped to image edges | Trust raw AI coordinates without padding (20-50px error margins) |
 | Read output image after blurring to verify correct regions were blurred | Skip the verification step |
 | Get image pixel dimensions with `magick identify` before generating coordinates | Assume coordinates without checking actual image dimensions |
 
@@ -44,9 +45,8 @@ Check that ImageMagick is installed and the image is valid.
    - macOS: `brew install imagemagick`
    - Ubuntu/Debian: `sudo apt install imagemagick`
    - Other: https://imagemagick.org/script/download.php
-2. Verify the image file exists and format is supported (png, jpg, jpeg, webp, tiff). **Reject animated images** (GIF, animated WebP, APNG) — `-region` blur applies to the first frame only, producing misleading output
-3. Get actual pixel dimensions: `magick identify -format '%wx%h' image.png` (if this returns multiple lines, the image is animated — stop and tell the user)
-4. Report dimensions to confirm the coordinate space — Retina/HiDPI screenshots may be 2x logical resolution
+2. Run `magick identify -format '%wx%h\n' image.png` — this validates the file exists, format is supported (png, jpg, jpeg, webp, tiff), and returns pixel dimensions in one step. If the command outputs multiple lines, the image is animated (GIF, animated WebP, APNG) — stop and tell the user, because `-region` blur only affects the first frame
+3. Report dimensions to confirm the coordinate space — Retina/HiDPI screenshots may be 2x logical resolution
 
 ## Phase 2: Identify Regions
 
@@ -100,8 +100,7 @@ magick input.png \
   -strip -quality 85 output-blurred.webp
 ```
 
-- Add `-strip` to remove EXIF/metadata from the output (screenshots may contain GPS, device info, or timestamps)
-- Default output filename: `<original-name>-blurred.webp` alongside the original
+- Default output filename: `<original-name>-blurred.webp` alongside the original (`-strip` removes EXIF metadata)
 - Present the full command and output path before running
 - Ask: "Run this command? The blurred image will be saved as [path]."
 
