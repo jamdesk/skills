@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
-AI agent skills for [Jamdesk](https://jamdesk.com) documentation workflows. These skills help AI coding assistants automatically keep your documentation in sync with your code.
+AI agent skills for [Jamdesk](https://jamdesk.com) workflows. These skills teach AI coding assistants to keep documentation in sync with code and handle common developer tasks like screenshot redaction.
 
 ## What is Jamdesk?
 
@@ -19,30 +19,33 @@ AI agent skills for [Jamdesk](https://jamdesk.com) documentation workflows. Thes
 
 ## Why Use These Skills?
 
-Documentation often falls out of sync with code. These skills solve that by teaching AI coding assistants how to automatically update your Jamdesk docs when you make changes to APIs, CLI commands, UI components, or configuration options.
+AI coding assistants are capable but generic. Skills give them domain-specific knowledge — how your docs are structured, what tools to use, what steps to follow. Instead of explaining your workflow every time, the skill handles it.
 
-**The workflow:**
-1. You implement a feature in your codebase
-2. Run `/update-jamdesk` in your AI assistant
-3. The skill analyzes your changes and creates or updates documentation
-4. Review, verify, and commit
+**update-jamdesk** keeps docs in sync with code. Implement a feature, run `/update-jamdesk`, and the skill analyzes your changes, writes documentation, and verifies it. No more "I'll document it later."
 
-No more outdated docs. No more "I'll document it later."
+**blur-image** detects and blurs sensitive text in screenshots. Say "blur the sensitive data in screenshot.png" and it finds API keys, emails, and credentials using AI vision, then redacts them with ImageMagick.
 
 ## Quick Start
 
 ```bash
-# 1. Install the skill
-npx skills add jamdesk/skills --skill update-jamdesk
+# Install a single skill
+npx skills add jamdesk/skills --skill blur-image
 
-# 2. Create a config file pointing to your docs
-echo "docs_path: ../my-docs" > .jamdesk-docs-path
-
-# 3. After implementing a feature, run in your AI assistant:
-/update-jamdesk
+# Or install all skills at once
+npx skills add jamdesk/skills
 ```
 
-The skill will analyze your changes, ask clarifying questions, write documentation, and offer to commit.
+Then use it in your AI assistant:
+
+```
+> blur the sensitive data in screenshot.png
+```
+
+For `update-jamdesk`, you'll also need a config file pointing to your docs repo:
+
+```bash
+echo "docs_path: ../my-docs" > .jamdesk-docs-path
+```
 
 ## Installation
 
@@ -79,34 +82,25 @@ These skills work with any AI coding assistant that supports the skills format:
 
 Run `npx skills add --help` for the full list of supported agents.
 
-## How It Works
+## How They Work
 
-The `update-jamdesk` skill teaches your AI assistant to:
+### update-jamdesk
 
-1. **Find your docs** - Locates your Jamdesk project via a `.jamdesk-docs-path` config file
-2. **Understand changes** - Analyzes what you've built and asks clarifying questions
-3. **Write documentation** - Creates or updates MDX pages following Jamdesk conventions
-4. **Verify** - Runs `jamdesk validate` and checks for broken links
-5. **Commit** - Stages changes and offers to commit/push/create a PR
-
-## Requirements
-
-- A [Jamdesk](https://jamdesk.com) documentation project with `docs.json`
-- An AI coding assistant (Claude Code, Cursor, etc.)
-- A `.jamdesk-docs-path` config file in your code repository
-- Optional: [Jamdesk CLI](https://jamdesk.com/docs/cli/overview) for local validation
-
-### Config File
-
-Create a `.jamdesk-docs-path` file in your code repository root:
+Teaches your AI assistant to find your docs repo, analyze code changes, write MDX pages following Jamdesk conventions, run `jamdesk validate`, and commit. Requires a `.jamdesk-docs-path` config file:
 
 ```yaml
 # Path to your Jamdesk docs (relative or absolute)
 docs_path: ../my-docs
-
-# Optional: default branch for doc updates
-docs_branch: main
+docs_branch: main  # Optional, default: main
 ```
+
+**Requirements:** A [Jamdesk](https://jamdesk.com) docs project with `docs.json`, an AI coding assistant, and optionally the [Jamdesk CLI](https://jamdesk.com/docs/cli/overview) for local validation.
+
+### blur-image
+
+Reads a screenshot with AI vision, identifies sensitive regions (API keys, emails, tokens, credentials), and blurs them with ImageMagick. Shows the command before running, verifies the output, and saves as WebP.
+
+**Requirements:** [ImageMagick 7+](https://imagemagick.org/script/download.php) (`brew install imagemagick` on macOS).
 
 ## Documentation
 
