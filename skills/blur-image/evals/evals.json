@@ -1,0 +1,46 @@
+{
+  "skill_name": "blur-image",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "blur the sensitive data in test-screenshot.webp",
+      "expected_output": "Detects .env values, bearer token, and API response PII. Asks clarifying questions about what to blur (values vs whole lines, which JSON fields). After user confirms, runs ImageMagick with per-line regions. Verifies output.",
+      "files": ["evals/files/test-screenshot.webp"],
+      "expectations": [
+        "Checks that ImageMagick is installed before proceeding",
+        "Runs magick identify to get image dimensions before generating coordinates",
+        "Presents findings grouped by type in plain language without pixel coordinates",
+        "Asks at least one clarifying question about what to blur",
+        "Uses per-line blur regions for structured content rather than one big rectangle",
+        "Reads the output image back to verify the blur worked",
+        "Saves output as WebP format"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I need to share this screenshot in our docs but hide the email addresses. Can you blur just the emails in test-screenshot.webp?",
+      "expected_output": "Locates the email in the API response. Mentions other sensitive content it found (API keys, bearer token, etc.) and asks if the user wants those blurred too. Blurs at minimum what was asked for.",
+      "files": ["evals/files/test-screenshot.webp"],
+      "expectations": [
+        "Identifies the email address in the JSON response",
+        "Proactively mentions other sensitive content beyond what user asked about",
+        "Asks whether user wants the additional sensitive content blurred",
+        "Does not blur content the user didn't ask for without confirmation",
+        "Verifies the output image after blurring"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "hey can you clean up test-screenshot.webp before i post it on github? theres some stuff in there that probably shouldnt be public",
+      "expected_output": "Understands the vague request as a blur/redact task. Scans image, presents all sensitive content found, asks targeted questions about what to include/exclude. Handles the casual tone appropriately.",
+      "files": ["evals/files/test-screenshot.webp"],
+      "expectations": [
+        "Recognizes this as a blur/redact request despite vague phrasing",
+        "Scans and identifies sensitive content categories",
+        "Presents findings in a clear organized way",
+        "Asks what the user wants blurred rather than assuming everything",
+        "Does not show pixel coordinates or raw magick commands to the user"
+      ]
+    }
+  ]
+}
