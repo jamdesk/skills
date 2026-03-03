@@ -20,7 +20,7 @@ Detect and blur sensitive regions in screenshots using AI vision + ImageMagick.
 | Always | Never |
 |--------|-------|
 | Check `which magick` before running; if missing, provide install instructions and stop | Run blur without user confirmation |
-| Show the generated command before executing | Overwrite the original file without `--overwrite` flag |
+| Confirm what will be blurred before executing (in human terms, not the raw command) | Overwrite the original file without `--overwrite` flag |
 | Use sigma >= 15 for privacy-sensitive content (low sigma is reversible) | Use sigma < 10 (can be reversed with deblurring algorithms) |
 | Save output as WebP with `-quality 85` | Blur decorative/non-sensitive content without asking |
 | Add 30-50px padding around detected regions, clamped to image edges | Trust raw AI coordinates without padding (20-50px error margins) |
@@ -88,11 +88,13 @@ Two modes depending on flags and user input.
 
 1. User describes what to blur: "blur the email in the top right" or "blur everything below the header"
 2. Read the image, locate the described content
-3. Propose padded coordinates and ask user to confirm
+3. Describe what you'll blur in plain language and ask user to confirm
 
 ## Phase 3: Generate Command
 
-Build the ImageMagick command with all confirmed regions.
+Build the ImageMagick command with all confirmed regions. The user already confirmed what to blur in Phase 2 — don't ask again. Just run it.
+
+**Per-line regions for structured content:** When blurring key=value pairs, JSON fields, or config lines, use a separate narrow `-region` per line targeting only the value portion. This keeps labels (variable names, JSON keys) readable while blurring just the secrets. A single large rectangle over the whole block looks sloppy and hides context the user wants visible.
 
 **Gaussian blur (default):**
 ```bash
@@ -111,8 +113,7 @@ magick input.png \
 ```
 
 - Default output filename: `<original-name>-blurred.webp` alongside the original (`-strip` removes EXIF metadata)
-- Present the full command and output path before running
-- Ask: "Run this command? The blurred image will be saved as [path]."
+- Tell the user where the output will be saved before running
 
 ## Phase 4: Execute and Verify
 
@@ -149,7 +150,7 @@ I've verified the output — sensitive values are blurred, labels and structure 
 ## Red Flags
 
 Stop if you catch yourself:
-- Running blur without showing the command first
+- Showing pixel coordinates, region dimensions, or the raw `magick` command to the user
 - Using sigma < 10 (text may be recoverable with deblurring)
 - Overwriting the original without `--overwrite` flag
 - Blurring the entire image instead of specific regions
