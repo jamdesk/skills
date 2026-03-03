@@ -26,6 +26,7 @@ Detect and blur sensitive regions in screenshots using AI vision + ImageMagick.
 | Add 30-50px padding around detected regions, clamped to image edges | Trust raw AI coordinates without padding (20-50px error margins) |
 | Read output image after blurring to verify correct regions were blurred | Skip the verification step |
 | Get image pixel dimensions with `magick identify` before generating coordinates | Assume coordinates without checking actual image dimensions |
+| Present findings in human-readable terms (categories and descriptions) | Show pixel coordinates, region dimensions, or offsets to the user |
 
 ## Flags
 
@@ -65,13 +66,22 @@ Two modes depending on flags and user input.
    - Passwords, database connection strings
 3. For each region, determine the bounding box `(x, y, width, height)` in pixels from **top-left origin** (ImageMagick's coordinate system)
 4. **Add 30-50px padding** to all sides of each detected region — AI spatial detection has 20-50px error margins. Clamp coordinates so regions don't extend past image edges (X >= 0, Y >= 0, X+W <= image width, Y+H <= image height)
-5. Present findings:
+5. Present findings grouped by type — describe what you found in plain language, never pixel coordinates. Users should not see region dimensions, offsets, or pixel positions:
    ```
-   I found N regions with sensitive text:
-   1. [description] at roughly (X, Y) — WxH (with padding)
-   2. [description] at roughly (X, Y) — WxH (with padding)
+   I found sensitive content in 3 areas:
+
+   - .env values: 4 secret values after the = signs
+     (DATABASE_URL, STRIPE_SECRET_KEY, SENDGRID_API_KEY, JWT_SECRET)
+   - Authorization header: Bearer token in the curl command
+   - API response: personal data (login, email, name fields)
+
+   Blur all of these? Or tell me which to skip.
    ```
-6. Ask user to confirm which regions to blur
+6. If the content has structure (key=value pairs, JSON, config files), ask targeted questions to clarify intent:
+   - "Blur just the values after the = signs, or the entire lines?"
+   - "The JSON response has login, email, and name — blur all three?"
+   - "There's an internal URL in the error output — want that blurred too?"
+   Users describe what to blur in human terms. You handle all the geometry internally.
 7. If no sensitive content found, report that and offer `--guided` mode
 
 ### Mode B — User-guided (`--guided` or when user specifies what to blur)
@@ -121,22 +131,19 @@ Claude: I'm using the blur-image skill to identify and blur sensitive regions.
 Preflight: magick found at /opt/homebrew/bin/magick (v7.1.2)
 Image: screenshot.png (1920x1080 PNG)
 
-I found 2 regions with sensitive text:
-1. Email address "user@company.com" at roughly (430, 210) — 320x65px (with padding)
-2. API key "sk_live_..." at roughly (80, 560) — 390x60px (with padding)
+I found sensitive content in 2 areas:
 
-Blur both regions? [Y/n]
+- Config values: an email address and API key after the = signs
+- Header section: an Authorization Bearer token
 
-User: Y
+Blur both? Or tell me which to skip.
 
-Running:
-  magick screenshot.png \
-    -region 320x65+430+210 -blur 0x20 \
-    -region 390x60+80+560 -blur 0x20 \
-    -strip -quality 85 screenshot-blurred.webp
+User: blur all
+
+Running blur...
 
 ✓ Done. Saved to screenshot-blurred.webp
-I've verified the output — both regions are blurred and surrounding content is intact.
+I've verified the output — sensitive values are blurred, labels and structure are intact.
 ```
 
 ## Red Flags
