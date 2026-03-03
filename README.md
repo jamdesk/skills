@@ -23,7 +23,7 @@ AI coding assistants are capable but generic. Skills give them domain-specific k
 
 **update-jamdesk** keeps docs in sync with code. Implement a feature, run `/update-jamdesk`, and the skill analyzes your changes, writes documentation, and verifies it. No more "I'll document it later."
 
-**blur-image** detects and blurs sensitive text in screenshots. Say "blur the sensitive data in screenshot.png" and it finds API keys, emails, and credentials using AI vision, then redacts them with ImageMagick.
+**blur-image** detects and blurs sensitive text in screenshots. Say "blur the sensitive data in screenshot.png" and it finds API keys, emails, and credentials using AI vision, asks what you want blurred in plain English, then redacts them with ImageMagick. You never touch a pixel coordinate.
 
 ## Quick Start
 
@@ -98,7 +98,7 @@ docs_branch: main  # Optional, default: main
 
 ### blur-image
 
-Reads a screenshot with AI vision, identifies sensitive regions (API keys, emails, tokens, credentials), and blurs them with ImageMagick. Shows the command before running, verifies the output, and saves as WebP.
+Reads a screenshot with AI vision, identifies sensitive regions (API keys, emails, tokens, credentials), and tells you what it found in plain language — no pixel coordinates or technical details. You confirm what to blur, it runs ImageMagick, verifies the output, and saves as WebP.
 
 **Requirements:** [ImageMagick 7+](https://imagemagick.org/script/download.php) (`brew install imagemagick` on macOS).
 

@@ -60,4 +60,4 @@ npx skills add jamdesk/skills --skill <skill-name>
 - Documentation: `jamdesk.com/docs/development/ai-documentation`
 
 ---
-*Last reviewed: 2026-02-03*
+*Last reviewed: 2026-03-03*
