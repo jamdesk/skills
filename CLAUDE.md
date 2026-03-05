@@ -11,7 +11,7 @@ This repository contains AI agent skills for [Jamdesk](https://jamdesk.com) docu
 ```
 skills/
 ├── README.md           # Installation instructions
-├── LICENSE             # MIT
+├── LICENSE             # Apache 2.0
 ├── CLAUDE.md           # This file
 └── skills/
     ├── blur-image/
