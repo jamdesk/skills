@@ -23,7 +23,7 @@ AI coding assistants are capable but generic. Skills give them domain-specific k
 
 **update-jamdesk** keeps docs in sync with code. Implement a feature, run `/update-jamdesk`, and the skill analyzes your changes, writes documentation, and verifies it. No more "I'll document it later."
 
-**blur-image** detects and blurs sensitive text in screenshots. Say "blur the sensitive data in screenshot.png" and it finds API keys, emails, and credentials using AI vision, asks what you want blurred in plain English, then redacts them with ImageMagick. You never touch a pixel coordinate.
+**blur-image** redacts sensitive data from screenshots before you share them. Point it at a screenshot and it scans for API keys, tokens, passwords, emails, names, and internal URLs using AI vision — then asks you in plain English what to blur. It handles everything from terminal screenshots with `.env` files to JSON API responses to faces in photos. You describe what to hide in words ("blur the values after the = signs"), and it handles the pixel math, coordinate calibration, and verification automatically.
 
 ## Quick Start
 
@@ -67,7 +67,7 @@ npx skills add jamdesk/skills
 | Skill | Description |
 |-------|-------------|
 | [update-jamdesk](./skills/update-jamdesk) | Automatically updates Jamdesk documentation when code changes |
-| [blur-image](./skills/blur-image) | Detects and blurs sensitive regions in screenshots using AI + ImageMagick |
+| [blur-image](./skills/blur-image) | Detects and blurs sensitive data (API keys, PII, credentials) in screenshots with per-line precision |
 
 ## Supported AI Coding Assistants
 
@@ -98,7 +98,15 @@ docs_branch: main  # Optional, default: main
 
 ### blur-image
 
-Reads a screenshot with AI vision, identifies sensitive regions (API keys, emails, tokens, credentials), and tells you what it found in plain language — no pixel coordinates or technical details. You confirm what to blur, it runs ImageMagick, verifies the output, and saves as WebP.
+Detects and blurs sensitive data in screenshots so you can share them safely. The skill:
+
+1. **Scans** the image with AI vision for credentials, PII, tokens, internal URLs, and other sensitive content
+2. **Discusses** what it found in plain English — you decide what to blur and what to keep
+3. **Calibrates** pixel coordinates using a grid overlay system, so blur regions land exactly on the right text (not one line above or below)
+4. **Blurs** with per-line precision — for a config file, it blurs each value individually while keeping the key names readable (`DATABASE_URL=` stays visible, the connection string disappears)
+5. **Verifies** by re-reading the output image and checking that every region is fully obscured
+
+Supports terminal screenshots (high-contrast text with double-pass blur), web pages, config files, JSON responses, and non-text content like faces and logos. Can use Gaussian blur (shows a visible smudge indicating redaction) or solid fill (completely removes the content) depending on your preference.
 
 **Requirements:** [ImageMagick 7+](https://imagemagick.org/script/download.php) (`brew install imagemagick` on macOS).
 
