@@ -1,6 +1,6 @@
 # Jamdesk Skills
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 
 AI agent skills for [Jamdesk](https://jamdesk.com) workflows. These skills teach AI coding assistants to keep documentation in sync with code and handle common developer tasks like screenshot redaction.
 
@@ -130,4 +130,4 @@ See [CLAUDE.md](./CLAUDE.md) for detailed guidelines.
 
 ## License
 
-MIT
+Apache 2.0
