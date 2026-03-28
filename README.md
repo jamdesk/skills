@@ -1,6 +1,8 @@
 # Jamdesk Skills
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
+[![Claude Code](https://img.shields.io/badge/Claude_Code-skills-blueviolet?logo=anthropic)](https://www.jamdesk.com/docs/claude-code)
+[![AI Agent](https://img.shields.io/badge/AI_Agent-compatible-green)](https://github.com/jamdesk/skills)
 
 AI agent skills for [Jamdesk](https://jamdesk.com) workflows. These skills teach AI coding assistants to keep documentation in sync with code and handle common developer tasks like screenshot redaction.
 
