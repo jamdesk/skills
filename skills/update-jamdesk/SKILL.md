@@ -98,16 +98,44 @@ The rules below are the load-bearing standards — fetch https://jamdesk.com/doc
 
 **Content quality:**
 - Explain *why*, not just *what*
+- Open feature sections with a one-sentence definition of the thing, then behavior, then configuration
 - Show the simplest working example first
 - Use concrete, realistic values in examples, not placeholders (readers learn faster from examples they can copy-paste) — but anything secret-shaped (API keys, tokens, passwords) must be obviously fake, e.g. `sk_test_xxxx`
 - Show expected output after commands so readers can confirm they're on track
 - One concept per section, 3-7 subsections per page
 - Define terms once and reuse consistently
 
-**Writing quality:**
-- Active voice, direct instructions
-- Short sentences, avoid idioms (global audiences)
-- Action-oriented headings ("Configure X", "Verify Y", "Troubleshoot Z")
+**Voice and tone:**
+
+| Rule | Example / note |
+|------|----------------|
+| Address the reader as "you" | "You can configure..." |
+| Refer to the product by name, never "we" | "Acme supports..." not "We support..." |
+| Present tense, active voice, direct instructions | "The command creates..." not "The command will create..." |
+| Use contractions | "don't", "isn't", "you'll" |
+| "must" for requirements, "can" for options | Never "should" for a requirement — use "must" or "we recommend" |
+| Cut "please", "simply", "just", "easily", "obviously" | If it were simple, the reader wouldn't need the page |
+| No Latin abbreviations | "for example" not "e.g.", "that is" not "i.e." |
+| No time-relative words | "currently", "new", "soon", "recently" go stale as docs age |
+| Don't anthropomorphize | "The server returns..." not "The server thinks..." |
+| Short sentences, no idioms | Write for a global audience |
+| Action-oriented headings | "Configure X", "Verify Y", "Troubleshoot Z" |
+
+**Anti-slop rules** — these patterns read as AI-generated; remove on sight:
+- No em dashes; use commas, periods, colons, or parentheses instead
+- Bold UI elements only ("Click **Settings**"), never for emphasis in prose
+- No filler transitions ("In this section, we'll explore...", "Let's take a look at..."); state the content directly
+- Don't start consecutive sentences or list items with the same word
+- No manufactured enthusiasm; no "Great news!", no exclamation marks
+- Plain verbs over inflated ones: "use" not "leverage", "is" not "boasts", "improve" not "supercharge"
+
+**Mechanics:**
+- Numbered lists only for sequential steps; bullets otherwise. Keep items parallel (all verb-first, or all noun phrases). Sentence items end with periods, fragments don't; never mix in one list
+- Start each step with an imperative verb; put conditions before instructions ("In **Settings**, click...")
+- Tables for items with 2+ attributes; bullets for single-attribute enumerations
+- UI verbs: "click" buttons (never "click on"), "select" from dropdowns, "enter" in text fields, "toggle" switches, "navigate to" pages
+- Numbers: spell out one through nine, numerals for 10 and up; always numerals with units ("3 GB", "port 3000")
+- Oxford comma; avoid semicolons in docs prose, split into two sentences instead
 - Descriptive link text (never "click here")
 - Include `<Warning>` for destructive/irreversible steps
 - **No description echo:** The opening paragraph MUST say something different from the frontmatter `description`. The description is for SEO meta tags; the opening paragraph should complement it with context, prerequisites, or what the reader will accomplish -- not repeat it.
@@ -118,7 +146,7 @@ The rules below are the load-bearing standards — fetch https://jamdesk.com/doc
 3. Quick Start (simplest example)
 4. Configuration/Details
 5. Examples (basic → advanced)
-6. Troubleshooting (optional — common errors and fixes; errors hit while building the feature are good candidates)
+6. Troubleshooting (optional — Symptom / Cause / Solution per issue; errors hit while building the feature are good candidates)
 7. What's Next (2-4 related links)
 
 **Page types:**
@@ -126,7 +154,7 @@ The rules below are the load-bearing standards — fetch https://jamdesk.com/doc
 - **Reference pages:** Minimal example first, then expand with details
 - **Concept pages:** Explain how something works and why (architecture, mental models) — link to task pages for the steps
 
-**Heading structure:** Single H1 (page title in frontmatter), body sections start at H2.
+**Heading structure:** Single H1 (page title in frontmatter), body sections start at H2. Sentence case (match the existing docs if they use title case), never skip levels, max depth H4. Give every H2/H3 at least one intro sentence before any list or sub-heading.
 
 **Minimal template:**
 ```mdx
@@ -172,6 +200,8 @@ command --example
 **Navigation:** Add new pages to `docs.json` navigation in alphabetical order unless the user has specified a different ordering or the existing structure suggests intentional grouping.
 
 **Maintenance:** Use `lastUpdated` frontmatter for frequently-changing features. Mark or remove deprecated guidance promptly.
+
+**Renames and removals:** When renaming, moving, or deleting a page, update every internal link to the old path and add a redirect if the docs.json schema supports it — never leave inbound links dangling. `jamdesk broken-links` must pass afterward (Phase 5).
 
 ## Phase 5: Verify
 
@@ -261,3 +291,6 @@ Stop if you catch yourself:
 - Missing `<Warning>` on destructive steps
 - Leaving deprecated content without marking it
 - Copying the frontmatter `description` as the opening paragraph (description echo)
+- Writing "simply", "just", or "easily" in instructions
+- Shipping anti-slop tells: em dashes, bold for emphasis, filler transitions, exclamation marks
+- Renaming or deleting a page without a redirect or updated inbound links
